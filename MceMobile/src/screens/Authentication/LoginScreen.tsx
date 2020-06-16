@@ -132,6 +132,7 @@ class LoginScreen extends React.Component<NavigationScreenProp<any, any>, State>
             password: this.state.password
           }
           const url = '/login'
+          this.props.navigation.navigate({routeName: "routeHome"})
           api.post(url, data)
           .then((response: any) => {
             this.props.navigation.navigate({routeName: "routeHome"})

@@ -4,7 +4,7 @@ import { View, Text, Button } from 'react-native'
 import { WebView } from 'react-native-webview'
 
 
-class HomeScreen extends React.Component<{}, {}> {
+class TaskSessionsScreen extends React.Component<{}, {}> {
 
     render() {
         return (
@@ -25,4 +25,4 @@ class HomeScreen extends React.Component<{}, {}> {
     }
 }
 
-export default HomeScreen
+export default TaskSessionsScreen
