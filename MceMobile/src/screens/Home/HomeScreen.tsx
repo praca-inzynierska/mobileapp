@@ -9,7 +9,8 @@ class HomeScreen extends React.Component<{}, {}> {
     render() {
         return (
             <View style={{flex:1}}>
-                <Text>Hello from home screen, here infos about app will be seen</Text>
+                <Button onPress={() => this.logout()} title="Wyloguj"/>
+
                 {/* <WebView 
                 //  source={{ uri: 'http://10.0.2.2:8080/boards/Zad1' }}
                 source={{ uri: 'http://192.168.137.1:8080/boards/z' }}
@@ -22,6 +23,10 @@ class HomeScreen extends React.Component<{}, {}> {
                 /> */}
             </View>
         )
+    }
+
+    logout() {
+        this.props.navigation.navigate({routeName: "routeLogin"})
     }
 }
 

@@ -11,7 +11,7 @@ interface State {
     token: String
 }
 
-class TaskSessionsScreen extends React.Component<NavigationScreenProp<any, any>, State> {
+class TaskSessionScreen extends React.Component<NavigationScreenProp<any, any>, State> {
 
     constructor(props: any) {
         super(props)
@@ -61,4 +61,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default TaskSessionsScreen
+export default TaskSessionScreen

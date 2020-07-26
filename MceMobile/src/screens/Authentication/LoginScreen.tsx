@@ -1,7 +1,7 @@
 
 import 'react-native-get-random-values'
 import React from 'react'
-import { View, Text, Button, TextInput, StyleSheet } from 'react-native'
+import { View, Text, Button, TextInput, StyleSheet, ToastAndroid } from 'react-native'
 import { Strings, Fonts } from '../../assets'
 import { NavigationScreenProp } from 'react-navigation'
 import { TabView, SceneMap } from 'react-native-tab-view'
@@ -23,8 +23,10 @@ class LoginScreen extends React.Component<NavigationScreenProp<any, any>, State>
     constructor(props: any) {
         super(props)
         this.state = {
-            login: "",
-            password: "",
+            // login: "danuta placek",
+            // login: "dorota bławatek",
+            login: "adela bławatek",
+            password: "asd",
             name: "",
             surname: "",
             email: "",
@@ -132,28 +134,32 @@ class LoginScreen extends React.Component<NavigationScreenProp<any, any>, State>
             password: this.state.password
           }
           const url = '/login'
-          this.props.navigation.navigate({routeName: "routeHome"})
-          api.post(url, data)
+          await api.post(url, data)
           .then((response: any) => {
-            this.props.navigation.navigate({routeName: "routeHome"})
+            this.props.navigation.navigate({routeName: "Zajęcia", params: response.data})
           })
-          .catch((e:any) => console.log(e))
+          .catch((e:any) => {
+             console.log(e)
+             ToastAndroid.show('Niepoprawny login lub hasło', ToastAndroid.SHORT)
+          })
     }
     
     handleRegister = async () => {
         const data = {
             username: this.state.login,
             password: this.state.password,
-            firstName: this.state.name,
-            lastName: this.state.surname,
-            isTeacher: false
+            first_name: this.state.name,
+            last_name: this.state.surname,
           }
           const url = '/register'
           api.post(url, data)
           .then((response: any) => {
-            this.props.navigation.navigate({routeName: "routeHome"})
+            this.props.navigation.navigate({routeName: "routeHome", params: response})
           })
-          .catch((e:any) => console.log(e))
+          .catch((e:any) => {
+              console.log(e)
+              ToastAndroid.show('Niepoprawne dane', ToastAndroid.SHORT)
+        })
         //this.props.navigation.navigate({routeName: "routeHome"})
       }
       
@@ -169,6 +175,6 @@ const styles = StyleSheet.create({
     text: {
         ...Fonts.title
     }
-});
+})
 
 export default LoginScreen
