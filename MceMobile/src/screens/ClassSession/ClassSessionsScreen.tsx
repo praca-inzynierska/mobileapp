@@ -45,10 +45,11 @@ class ClassSessionsScreen extends React.Component<NavigationScreenProp<any, any>
     }
 
     renderClassSession(c: any, index: number) {
-        var start = moment(c.endDate)
+        var start = moment(c.startDate)
         var startDate = start.format("dd.mm.yyyy hh:MM")
         var end = moment(c.endDate)
         var endDate = end.format("dd.mm.yyyy hh:MM")
+        console.log(c)
         return (
             <View>
                 <Button 

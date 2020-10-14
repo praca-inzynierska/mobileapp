@@ -21,9 +21,9 @@ class TaskSessionsScreen extends React.Component<NavigationScreenProp<any, any>,
         }
     }
 
-    componentDidMount () {
+    async componentDidMount () {
         var data = this.props.navigation.state.params
-        this.setState({taskSessions: data.classSession.taskSessions})
+        await this.setState({taskSessions: data.classSession.taskSessions})
     }
 
     render() {
@@ -41,7 +41,7 @@ class TaskSessionsScreen extends React.Component<NavigationScreenProp<any, any>,
             <View style={styles.container}>
                 <Button 
                    title={t.task.name}
-                     onPress={() => this.props.navigation.navigate({routeName: "TaskSession", params: {classSession: this.state.taskSessions[index], token: this.state.token}})}
+                     onPress={() => this.props.navigation.navigate({routeName: "TaskSession", params: {taskSession: this.state.taskSessions[index], token: this.state.token}})}
               />
                 <Text style={styles.text}>{`Czas na zadanie: ${t.task.minutes} minut, ${t.task.subject}`}</Text>
             </View>

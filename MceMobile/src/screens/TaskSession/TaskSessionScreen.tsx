@@ -5,9 +5,10 @@ import { WebView } from 'react-native-webview'
 import { NavigationScreenProp } from 'react-navigation'
 import api from '../../utils/api'
 import moment from 'moment'
+import { cos } from 'react-native-reanimated'
 
 interface State {
-    taskSessions: Array<any>
+    taskSession: any
     token: String
 }
 
@@ -16,37 +17,41 @@ class TaskSessionScreen extends React.Component<NavigationScreenProp<any, any>, 
     constructor(props: any) {
         super(props)
         this.state = {
-            taskSessions: [],
+            taskSession: null,
             token: ""
         }
     }
 
-    componentDidMount () {
+    async componentDidMount () {
         var data = this.props.navigation.state.params
-        this.setState({taskSessions: data.classSession.taskSessions})
+        await this.setState({taskSession: data.taskSession})
     }
 
     render() {
-        console.log(this.state)
-        return (
-            <View style={{flex:1}}>
-                <Text>Zadania</Text>
-                {this.state.taskSessions.map((t: any, index: number) => this.renderTaskSession(t, index))}
-            </View>
+        if(this.state.taskSession == null) {
+            return (
+                null
+            )
+        }
+        else {
+            var task = this.state.taskSession.task
+            return (
+                <View style={{flex:1}}>
+                    <Text>{task.name}</Text>
+                    <Text>{task.description}</Text>
+                    <Text>{task.subject}</Text>
+                    {task.tools.includes('whiteboard') ? this.renderWhiteboardButton(task) : null}
+                </View>
+            )
+        }
+    }
+
+    renderWhiteboardButton(task: any) {
+        return(
+            <Button onPress={() => this.props.navigation.navigate({routeName: "Whiteboard", params: {taskId: task.id}})} title="tablica"/>
         )
     }
 
-    renderTaskSession(t: any, index: number) {
-        return (
-            <View style={styles.container}>
-                <Button 
-                   title={t.task.name}
-                     onPress={() => this.props.navigation.navigate({routeName: "TaskSession", params: {classSession: this.state.taskSessions[index], token: this.state.token}})}
-              />
-                <Text style={styles.text}>{`Czas na zadanie: ${t.task.minutes} minut, ${t.task.subject}`}</Text>
-            </View>
-        )    
-    }
 }
 
 const styles = StyleSheet.create({
