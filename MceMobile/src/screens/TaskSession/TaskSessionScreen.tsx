@@ -41,6 +41,7 @@ class TaskSessionScreen extends React.Component<NavigationScreenProp<any, any>, 
                     <Text>{task.description}</Text>
                     <Text>{task.subject}</Text>
                     {task.tools.includes('whiteboard') ? this.renderWhiteboardButton(task) : null}
+                    {task.tools.includes('textChat') ? this.renderChatButton(task) : null}
                 </View>
             )
         }
@@ -49,6 +50,12 @@ class TaskSessionScreen extends React.Component<NavigationScreenProp<any, any>, 
     renderWhiteboardButton(task: any) {
         return(
             <Button onPress={() => this.props.navigation.navigate({routeName: "Whiteboard", params: {taskId: task.id}})} title="tablica"/>
+        )
+    }
+
+    renderChatButton(task: any) {
+        return(
+            <Button onPress={() => this.props.navigation.navigate({routeName: "Chat", params: {taskId: task.id}})} title="czat"/>
         )
     }
 

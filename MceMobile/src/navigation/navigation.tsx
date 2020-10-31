@@ -9,12 +9,15 @@ import ClassSessionsScreen from '../screens/ClassSession/ClassSessionsScreen'
 import TaskSessionsScreen from '../screens/TaskSession/TaskSessionsScreen'
 import TaskSessionScreen from '../screens/TaskSession/TaskSessionScreen'
 import WhiteboardScreen from '../screens/TaskSession/Tools/WhiteBoardScreen'
+import ChatScreen from '../screens/TaskSession/Tools/ChatScreen'
+
 
 const TaskSessionStackNavigator = createStackNavigator(
     {
         TaskSessions: TaskSessionsScreen,
         TaskSession: TaskSessionScreen,
-        Whiteboard: WhiteboardScreen
+        Whiteboard: WhiteboardScreen,
+        Chat: ChatScreen
     }
 )
 
