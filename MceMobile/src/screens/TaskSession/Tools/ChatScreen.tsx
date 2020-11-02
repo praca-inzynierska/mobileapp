@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 interface State {
     id: any
-    messages: []
+    messages: any
 }
 
 
