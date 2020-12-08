@@ -8,7 +8,8 @@ import moment from 'moment'
 
 interface State {
     taskSessions: Array<any>
-    token: String
+    token: String,
+    classSession: any
 }
 
 class TaskSessionsScreen extends React.Component<NavigationScreenProp<any, any>, State> {
@@ -17,13 +18,14 @@ class TaskSessionsScreen extends React.Component<NavigationScreenProp<any, any>,
         super(props)
         this.state = {
             taskSessions: [],
-            token: ""
+            token: "",
+            classSession: null
         }
     }
 
     async componentDidMount () {
         var data = this.props.navigation.state.params
-        await this.setState({taskSessions: data.classSession.taskSessions})
+        await this.setState({taskSessions: data.classSession.taskSessions, classSession: data.classSession})
     }
 
     render() {
@@ -41,7 +43,7 @@ class TaskSessionsScreen extends React.Component<NavigationScreenProp<any, any>,
             <View style={styles.container}>
                 <Button 
                    title={t.task.name}
-                     onPress={() => this.props.navigation.navigate({routeName: "TaskSession", params: {taskSession: this.state.taskSessions[index], token: this.state.token}})}
+                     onPress={() => this.props.navigation.navigate({routeName: "TaskSession", params: {taskSession: this.state.taskSessions[index], token: this.state.token, endTime: this.state.classSession.endDate}})}
               />
                 <Text style={styles.text}>{`Czas na zadanie: ${t.task.minutes} minut, ${t.task.subject}`}</Text>
             </View>

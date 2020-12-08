@@ -14,7 +14,11 @@ import ChatScreen from '../screens/TaskSession/Tools/ChatScreen'
 
 const TaskSessionStackNavigator = createStackNavigator(
     {
-        TaskSessions: TaskSessionsScreen,
+        TaskSessions: {
+            screen: TaskSessionsScreen,
+            navigationOptions: {
+            }
+        },
         TaskSession: TaskSessionScreen,
         Whiteboard: WhiteboardScreen,
         Chat: ChatScreen
@@ -23,7 +27,12 @@ const TaskSessionStackNavigator = createStackNavigator(
 
 const ClassSessionStackNavigator = createStackNavigator(
     {
-        Zajęcia: ClassSessionsScreen,
+        Zajęcia: {
+            screen: ClassSessionsScreen,
+            navigationOptions: {
+                headerLeft: undefined
+            }
+        },
         Zadania: TaskSessionStackNavigator
     }
 )
