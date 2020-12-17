@@ -3,53 +3,48 @@ import React from 'react'
 import { View, Text, Button, KeyboardAvoidingView } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { NavigationScreenProp } from 'react-navigation'
-import { GiftedChat } from 'react-native-gifted-chat'
-import Fire from '../../../../Fire'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 interface State {
-    id: any
+    taskSession: any
     messages: any
+    user: string
 }
-
 
 class ChatScreen extends React.Component<NavigationScreenProp<any, any>, State> {
 
     constructor(props: any) {
         super(props)
         this.state = {
-            id: null,
-            messages: []
-        }
-    }
-
-    get user() {
-        return {
-            _id: Fire.uid,
-            name: 'beata'
+            taskSession: null,
+            messages: [],
+            user: ""
         }
     }
 
     async componentDidMount () {
-        Fire.get((message: any) => this.setState(previous => ({
-            messages: GiftedChat.append(previous.messages, message)
-        })))
         var data = this.props.navigation.state.params
-        await this.setState({id: data.taskId})
+        await this.setState({taskSession: data.taskSession, user: data.user})
     }
 
-    componentWillUnmount() {
-        Fire.off()
-    }
 
     render() {
-        const chat = <GiftedChat messages={this.state.messages} onSend={Fire.send} user={this.user} />
-
+        console.log(this.state)
+        if(this.state.taskSession != null && this.state.user != "")
         return (
             <SafeAreaView style={{flex: 1}} behavior='padding' keyboardVerticalOffset={30} enabled>
-                {chat}
+                <View style={{flex:1}}>
+                    <WebView 
+                    source={{ uri: `http://10.0.2.2:8083/${this.state.taskSession.id}?name=${this.state.user}` }}
+                     javaScriptEnabled={true}
+                     domStorageEnabled={true}
+                     startInLoadingState={true}
+                     scalesPageToFit={false}
+                    />
+                </View>
             </SafeAreaView>
         )
+        else return null
     }
 }
 
