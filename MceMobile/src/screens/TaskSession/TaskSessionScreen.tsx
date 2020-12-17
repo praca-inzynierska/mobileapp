@@ -6,11 +6,14 @@ import { NavigationScreenProp } from 'react-navigation'
 import api from '../../utils/api'
 import moment from 'moment'
 import { cos } from 'react-native-reanimated'
+import { SceneMap, TabView } from 'react-native-tab-view'
 
 interface State {
     taskSession: any
     token: String
     endTime: any
+    index: number
+    user: string
 }
 
 class TaskSessionScreen extends React.Component<NavigationScreenProp<any, any>, State> {
@@ -20,13 +23,21 @@ class TaskSessionScreen extends React.Component<NavigationScreenProp<any, any>, 
         this.state = {
             taskSession: null,
             token: "",
-            endTime: null
+            endTime: null,
+            index: 0,
+            user: ""
         }
     }
 
     async componentDidMount () {
         var data = this.props.navigation.state.params
         await this.setState({taskSession: data.taskSession, endTime: data.endTime})
+        await api.get('/users/info')
+        .then((response: any) => {
+          console.log(response)
+          this.setState({ user: response.data.username })
+        })
+        .catch((e: any) => console.log(e))
     }
 
     render() {
@@ -44,8 +55,8 @@ class TaskSessionScreen extends React.Component<NavigationScreenProp<any, any>, 
                     <Text>{task.description}</Text>
                     <Text>{task.subject}</Text>
                     <Text>{`termin oddania zadania: ${deadline.locale('pl').fromNow()}`}</Text>
-                    {task.tools.includes('whiteboard') ? this.renderWhiteboardButton(task) : null}
-                    {task.tools.includes('textChat') ? this.renderChatButton(task) : null}
+                    {task.tools.includes('whiteboard') ? this.renderWhiteboardButton(this.state.taskSession) : null}
+                    {task.tools.includes('textChat') ? this.renderChatButton(this.state.taskSession) : null}
                     <Text>Uczniowie biorący udział w zadaniu:</Text>
                     {this.state.taskSession.students.map((s: any, index: number) => this.renderGroupUsers(s, index))}
                     </View>        
@@ -53,15 +64,15 @@ class TaskSessionScreen extends React.Component<NavigationScreenProp<any, any>, 
         }
     }
 
-    renderWhiteboardButton(task: any) {
+    renderWhiteboardButton(taskSession: any) {
         return(
-            <Button onPress={() => this.props.navigation.navigate({routeName: "Whiteboard", params: {taskId: task.id}})} title="tablica"/>
+            <Button onPress={() => this.props.navigation.navigate({routeName: "Whiteboard", params: {taskSession: taskSession}})} title="tablica"/>
         )
     }
 
-    renderChatButton(task: any) {
+    renderChatButton(taskSession: any) {
         return(
-            <Button onPress={() => this.props.navigation.navigate({routeName: "Chat", params: {taskId: task.id}})} title="czat"/>
+            <Button onPress={() => this.props.navigation.navigate({routeName: "Chat", params: {taskSession: taskSession, user: this.state.user}})} title="czat"/>
         )
     }
 

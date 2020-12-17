@@ -20,7 +20,7 @@ class WhiteboardScreen extends React.Component<NavigationScreenProp<any, any>, S
 
     async componentDidMount () {
         var data = this.props.navigation.state.params
-        await this.setState({id: data.taskId})
+        await this.setState({id: data.id})
     }
 
     render() {
@@ -31,11 +31,8 @@ class WhiteboardScreen extends React.Component<NavigationScreenProp<any, any>, S
         else {
             return (
                 <View style={{flex:1}}>
-                    <Text>Whiteboard is available</Text>
                     <WebView 
-                    //  source={{ uri: 'http://10.0.2.2:8080/boards/Zad1' }}
                     source={{ uri: `http://10.0.2.2:8090/boards/${this.state.id}` }}
-                    // source={{ uri: 'http://192.168.137.1:3001/task-editor' }}
                      javaScriptEnabled={true}
                      domStorageEnabled={true}
                      startInLoadingState={true}
