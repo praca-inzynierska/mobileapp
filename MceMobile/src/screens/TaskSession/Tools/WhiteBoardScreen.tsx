@@ -19,7 +19,7 @@ class WhiteboardScreen extends React.Component<NavigationScreenProp<any, any>, S
     }
 
     async componentDidMount () {
-        var data = this.props.navigation.state.params
+        var data = this.props.navigation.state.params.taskSession
         await this.setState({id: data.id})
     }
 
