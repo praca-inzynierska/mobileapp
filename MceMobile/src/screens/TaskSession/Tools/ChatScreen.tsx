@@ -30,7 +30,7 @@ class ChatScreen extends React.Component<NavigationScreenProp<any, any>, State> 
 
     render() {
         console.log(this.state)
-        if(this.state.taskSession != null && this.state.user != "")
+        if(this.state.taskSession != null && this.state.taskSession.id != null && this.state.user != "")
         return (
             <SafeAreaView style={{flex: 1}} behavior='padding' keyboardVerticalOffset={30} enabled>
                 <View style={{flex:1}}>

@@ -14,6 +14,7 @@ interface State {
     endTime: any
     index: number
     user: string
+    routes: any
 }
 
 class TaskSessionScreen extends React.Component<NavigationScreenProp<any, any>, State> {
@@ -25,59 +26,118 @@ class TaskSessionScreen extends React.Component<NavigationScreenProp<any, any>, 
             token: "",
             endTime: null,
             index: 0,
-            user: ""
+            user: "",
+            routes: [{ key: 'task', title: 'Zadanie' }, { key: 'whiteboard', title: 'Tablica' }, { key: 'chat', title: 'Czat' }]
         }
     }
 
-    async componentDidMount () {
+    async componentDidMount() {
         var data = this.props.navigation.state.params
-        await this.setState({taskSession: data.taskSession, endTime: data.endTime})
+        await this.setState({ taskSession: data.taskSession, endTime: data.endTime })
         await api.get('/users/info')
-        .then((response: any) => {
-          console.log(response)
-          this.setState({ user: response.data.username })
-        })
-        .catch((e: any) => console.log(e))
+            .then((response: any) => {
+                console.log(response)
+                this.setState({ user: response.data.username })
+            })
+            .catch((e: any) => console.log(e))
     }
 
     render() {
-        if(this.state.taskSession == null) {
+        if (this.state.taskSession == null) {
             return (
                 null
             )
         }
-        else {
-            var task = this.state.taskSession.task
-            const deadline = moment(this.state.endTime)
-            return (
-                <View style={{flex:1}}>
-                    <Text>{task.name}</Text>
-                    <Text>{task.description}</Text>
-                    <Text>{task.subject}</Text>
-                    <Text>{`termin oddania zadania: ${deadline.locale('pl').fromNow()}`}</Text>
-                    {task.tools.includes('whiteboard') ? this.renderWhiteboardButton(this.state.taskSession) : null}
-                    {task.tools.includes('textChat') ? this.renderChatButton(this.state.taskSession) : null}
-                    <Text>Uczniowie biorący udział w zadaniu:</Text>
-                    {this.state.taskSession.students.map((s: any, index: number) => this.renderGroupUsers(s, index))}
-                    </View>        
-            )
-        }
+        return (
+            <TabView
+                swipeEnabled={false}
+                navigationState={this.state}
+                renderScene={SceneMap({
+                    task: this.TaskRoute,
+                    whiteboard: this.WhiteboardRoute,
+                    chat: this.ChatRoute
+                })}
+                onIndexChange={index => this.setState({ index })}
+            />
+        )
     }
 
+    // render() {
+    //     if(this.state.taskSession == null) {
+    //         return (
+    //             null
+    //         )
+    //     }
+    //     else {
+    //         var task = this.state.taskSession.task
+    //         const deadline = moment(this.state.endTime)
+    //         return (
+    //             <View style={{flex:1}}>
+    //                 <Text>{task.name}</Text>
+    //                 <Text>{task.description}</Text>
+    //                 <Text>{task.subject}</Text>
+    //                 <Text>{`termin oddania zadania: ${deadline.locale('pl').fromNow()}`}</Text>
+    //                 {task.tools.includes('whiteboard') ? this.renderWhiteboardButton(this.state.taskSession) : null}
+    //                 {task.tools.includes('textChat') ? this.renderChatButton(this.state.taskSession) : null}
+    //                 <Text>Uczniowie biorący udział w zadaniu:</Text>
+    //                 {this.state.taskSession.students.map((s: any, index: number) => this.renderGroupUsers(s, index))}
+    //                 </View>        
+    //         )
+    //     }
+    // }
+
+    TaskRoute = () =>
+        (
+            <View style={{ flex: 1 }}>
+                <Text style={{ marginBottom: 20 }}>{this.state.taskSession.task.name}</Text>
+                <Text style={{ marginBottom: 20 }}>{this.state.taskSession.task.description}</Text>
+                <Text style={{ marginBottom: 20 }}>{this.state.taskSession.task.subject}</Text>
+                <Text style={{ marginBottom: 20 }}>{`termin oddania zadania: ${moment(this.state.endTime).locale('pl').fromNow()}`}</Text>
+                <Text>Uczniowie biorący udział w zadaniu:</Text>
+                {this.state.taskSession.students.map((s: any, index: number) => this.renderGroupUsers(s, index))}
+            </View>
+        )
+
+    WhiteboardRoute = () =>
+        (
+            <View style={{ flex: 1 }}>
+                <WebView
+                    source={{ uri: `http://10.0.2.2:8090/boards/${this.state.taskSession.id}` }}
+                    javaScriptEnabled={true}
+                    domStorageEnabled={true}
+                    startInLoadingState={true}
+                    scalesPageToFit={true}
+                />
+            </View>
+        )
+
+    ChatRoute = () =>
+        (
+            <View style={{ flex: 1 }}>
+                <WebView
+                    source={{ uri: `http://10.0.2.2:8083/${this.state.taskSession.id}?name=${this.state.user}` }}
+                    javaScriptEnabled={true}
+                    domStorageEnabled={true}
+                    startInLoadingState={true}
+                    scalesPageToFit={false}
+                />
+            </View>
+        )
+
     renderWhiteboardButton(taskSession: any) {
-        return(
-            <Button onPress={() => this.props.navigation.navigate({routeName: "Whiteboard", params: {taskSession: taskSession}})} title="tablica"/>
+        return (
+            <Button onPress={() => this.props.navigation.navigate({ routeName: "Whiteboard", params: { taskSession: taskSession } })} title="tablica" />
         )
     }
 
     renderChatButton(taskSession: any) {
-        return(
-            <Button onPress={() => this.props.navigation.navigate({routeName: "Chat", params: {taskSession: taskSession, user: this.state.user}})} title="czat"/>
+        return (
+            <Button onPress={() => this.props.navigation.navigate({ routeName: "Chat", params: { taskSession: taskSession, user: this.state.user } })} title="czat" />
         )
     }
 
     renderGroupUsers(student: any, index: number) {
-        return(
+        return (
             <Text>{`${student.user.firstName} ${student.user.lastName} `}</Text>
         )
     }

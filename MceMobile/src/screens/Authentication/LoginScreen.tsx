@@ -27,10 +27,8 @@ class LoginScreen extends React.Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
-      // login: "danuta placek",
-      // login: "dorota bławatek",
-      login: 'adela bławatek',
-      password: 'asd',
+      login: '',
+      password: '',
       name: '',
       surname: '',
       email: '',
@@ -144,6 +142,7 @@ class LoginScreen extends React.Component<Props, State> {
       await api.post(url, data)
         .then((response: any) => {
           api.defaults.headers.Token = response.data.token
+          console.log(response.data.token)
           this.props.login(response.data.token, response.data.username)
           this.props.navigation.navigate({ routeName: 'Zajęcia', params: response.data })
         })
