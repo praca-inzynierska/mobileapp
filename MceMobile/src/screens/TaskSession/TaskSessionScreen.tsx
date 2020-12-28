@@ -7,6 +7,7 @@ import api from '../../utils/api'
 import moment from 'moment'
 import { cos } from 'react-native-reanimated'
 import { SceneMap, TabView } from 'react-native-tab-view'
+import { connect } from 'react-redux'
 
 interface State {
     taskSession: any
@@ -62,30 +63,6 @@ class TaskSessionScreen extends React.Component<NavigationScreenProp<any, any>, 
         )
     }
 
-    // render() {
-    //     if(this.state.taskSession == null) {
-    //         return (
-    //             null
-    //         )
-    //     }
-    //     else {
-    //         var task = this.state.taskSession.task
-    //         const deadline = moment(this.state.endTime)
-    //         return (
-    //             <View style={{flex:1}}>
-    //                 <Text>{task.name}</Text>
-    //                 <Text>{task.description}</Text>
-    //                 <Text>{task.subject}</Text>
-    //                 <Text>{`termin oddania zadania: ${deadline.locale('pl').fromNow()}`}</Text>
-    //                 {task.tools.includes('whiteboard') ? this.renderWhiteboardButton(this.state.taskSession) : null}
-    //                 {task.tools.includes('textChat') ? this.renderChatButton(this.state.taskSession) : null}
-    //                 <Text>Uczniowie biorący udział w zadaniu:</Text>
-    //                 {this.state.taskSession.students.map((s: any, index: number) => this.renderGroupUsers(s, index))}
-    //                 </View>        
-    //         )
-    //     }
-    // }
-
     TaskRoute = () =>
         (
             <View style={{ flex: 1 }}>
@@ -115,7 +92,7 @@ class TaskSessionScreen extends React.Component<NavigationScreenProp<any, any>, 
         (
             <View style={{ flex: 1 }}>
                 <WebView
-                    source={{ uri: `http://10.0.2.2:8083/${this.state.taskSession.id}?name=${this.state.user}` }}
+                    source={{ uri: `http://10.0.2.2:8083/${this.state.taskSession.id}?name=${this.props.username}` }}
                     javaScriptEnabled={true}
                     domStorageEnabled={true}
                     startInLoadingState={true}
@@ -123,18 +100,6 @@ class TaskSessionScreen extends React.Component<NavigationScreenProp<any, any>, 
                 />
             </View>
         )
-
-    renderWhiteboardButton(taskSession: any) {
-        return (
-            <Button onPress={() => this.props.navigation.navigate({ routeName: "Whiteboard", params: { taskSession: taskSession } })} title="tablica" />
-        )
-    }
-
-    renderChatButton(taskSession: any) {
-        return (
-            <Button onPress={() => this.props.navigation.navigate({ routeName: "Chat", params: { taskSession: taskSession, user: this.state.user } })} title="czat" />
-        )
-    }
 
     renderGroupUsers(student: any, index: number) {
         return (
@@ -156,4 +121,12 @@ const styles = StyleSheet.create({
     }
 })
 
-export default TaskSessionScreen
+const mapStateToProps = (state: any) => ({
+    username: state.auth.username
+  })
+  
+  const component = connect(
+    mapStateToProps
+  )(TaskSessionScreen)
+  
+export default component
